@@ -2,49 +2,50 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title> Weather App</title>
+  <title>Weather App</title>
   <style>
     body {
       margin: 0;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       color: #fff;
       text-align: center;
-      background: linear-gradient(to bottom, #ffb6c1, #ff69b4);
+      background: linear-gradient(to bottom, #c5b6ff, #69e4ff);
       min-height: 100vh;
       overflow: hidden;
       position: relative;
     }
     header {
-      padding: 20px;
-      font-size: 2rem;
+      padding: 25px;
+      font-size: 3rem;   /* Bigger title */
       font-weight: bold;
-      text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+      text-shadow: 3px 3px 8px rgba(0,0,0,0.4);
     }
     #search-box {
-      margin: 20px;
+      margin: 25px;
     }
     #search-box input {
-      padding: 8px;
-      font-size: 1rem;
-      border-radius: 10px;
+      padding: 12px 15px;
+      font-size: 1.5rem;   /* Bigger input text */
+      border-radius: 12px;
       border: none;
     }
     #search-box button {
-      padding: 8px 12px;
-      font-size: 1rem;
-      border-radius: 10px;
+      padding: 12px 18px;
+      font-size: 1.3rem;   /* Bigger button text */
+      border-radius: 12px;
       border: none;
       background: #fff;
       cursor: pointer;
-      margin-left: 5px;
+      margin-left: 8px;
     }
     #weather {
-      margin-top: 30px;
-      font-size: 1.2rem;
+      margin-top: 35px;
+      font-size: 1.6rem;   /* Bigger weather text */
     }
     .temp {
-      font-size: 3rem;
-      margin: 10px 0;
+      font-size: 4rem;   /* Bigger temperature */
+      margin: 15px 0;
+      font-weight: bold;
     }
 
     /* --- Decorative Animations --- */
@@ -63,12 +64,12 @@
       position: absolute;
       top: 60px;
       right: 80px;
-      width: 100px;
-      height: 100px;
+      width: 120px;
+      height: 120px;
       border-radius: 50%;
       background: radial-gradient(circle, #fffacd, #ffd700);
       animation: pulse 3s ease-in-out infinite;
-      box-shadow: 0 0 30px #fffacd;
+      box-shadow: 0 0 35px #fffacd;
     }
     @keyframes pulse {
       0%, 100% { transform: scale(1); opacity: 1; }
@@ -90,8 +91,8 @@
     /* --- Weather Animations --- */
     .rain {
       position: absolute;
-      width: 2px;
-      height: 20px;
+      width: 3px;
+      height: 25px;
       background: rgba(255,255,255,0.7);
       animation: fall 1s linear infinite;
     }
@@ -101,8 +102,8 @@
     }
     .snow {
       position: absolute;
-      width: 8px;
-      height: 8px;
+      width: 10px;
+      height: 10px;
       background: white;
       border-radius: 50%;
       animation: snowFall 5s linear infinite;
@@ -127,7 +128,7 @@
   </style>
 </head>
 <body>
-  <header> Weather App</header>
+  <header>Weather App</header>
   <div class="sun" id="sun"></div>
   <div id="search-box">
     <input type="text" id="cityInput" placeholder="Search city...">
@@ -140,7 +141,7 @@
     const apiKey = "67e6a637b3c84b489cc75319250109";
     const weatherBox = document.getElementById("weather");
 
-    // Generate decorative clouds
+    // Decorative clouds
     for (let i = 0; i < 5; i++) {
       let cloud = document.createElement("div");
       cloud.className = "cloud";
@@ -152,7 +153,7 @@
       document.body.appendChild(cloud);
     }
 
-    // Generate stars (for night mode)
+    // Stars (night mode)
     for (let i = 0; i < 30; i++) {
       let star = document.createElement("div");
       star.className = "star";
@@ -167,14 +168,15 @@
         const res = await fetch(`https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${query}&aqi=no`);
         const data = await res.json();
         displayWeather(data);
-      } catch {
-        weatherBox.innerHTML = "⚠️ Error fetching weather!";
+      } catch (err) {
+        console.error(err);
+        weatherBox.innerHTML = "⚠ Error fetching weather!";
       }
     }
 
     function displayWeather(data) {
       if (!data || !data.current) {
-        weatherBox.innerHTML = "⚠️ Weather data unavailable";
+        weatherBox.innerHTML = "⚠ Weather data unavailable";
         return;
       }
       weatherBox.innerHTML = `
@@ -191,7 +193,7 @@
       document.querySelectorAll(".rain, .snow, .flash").forEach(e => e.remove());
       document.getElementById("sun").style.display = isDay ? "block" : "none";
 
-      // If night → stars visible
+      // Night = stars visible
       document.querySelectorAll(".star").forEach(star => {
         star.style.display = isDay ? "none" : "block";
       });
@@ -227,11 +229,11 @@
             getWeather(query);
           },
           () => {
-            weatherBox.innerHTML = "⚠️ Location access denied.";
+            weatherBox.innerHTML = "⚠ Location access denied.";
           }
         );
       } else {
-        weatherBox.innerHTML = "⚠️ Geolocation not supported.";
+        weatherBox.innerHTML = "⚠ Geolocation not supported.";
       }
     }
 
@@ -240,9 +242,8 @@
       if (city) getWeather(city);
     }
 
-    // Try user location on page load
+    // Auto-load user location
     window.onload = useLocation;
   </script>
 </body>
 </html>
-
